@@ -20,10 +20,17 @@ def replace_template_words(page, line):
     line_check = TEMPLATE_PATTERN.split(line)
     if len(line_check) < 2:
         return line
-    if line_check[1] == TEMPLATE_CURRENT_DICT[page]:
-        line_check[1] = CURRENT_SPAN
+
+    # need to remove the "current" template word, or replace it if it matches page title
+    if line_check[1] in TEMPLATE_CURRENT_DICT.keys():
+        if line_check[1] == TEMPLATE_CURRENT_DICT[page]:
+            line_check[1] = CURRENT_SPAN
+        else:
+            line_check[1] = ""
+
     if line_check[1] == "title":
         line_check[1] = TEMPLATE_TITLE_DICT[page]
+        
     return ''.join(line_check)
 
 # Generate an html file consisting of top template > content > bottom template
