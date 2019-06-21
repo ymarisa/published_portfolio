@@ -22,7 +22,7 @@ def replace_template_words(page, line):
         return line
 
     # need to remove the "current" template word, or replace it if it matches page title
-    if line_check[1] in TEMPLATE_CURRENT_DICT.keys():
+    if line_check[1] in TEMPLATE_CURRENT_DICT.values():
         if line_check[1] == TEMPLATE_CURRENT_DICT[page]:
             line_check[1] = CURRENT_SPAN
         else:
