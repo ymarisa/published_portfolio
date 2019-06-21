@@ -1,5 +1,16 @@
 # my_portfolio
 
+### Build
+
+The `index.html` file is located in `/docs`
+
+To build run:
+```bash
+python3 build.py
+```
+
+These scripts are equivalent, and create the html files from the tempaltes and content.
+
 ### Sources
 Email contact form from startbootstrap theme
     https://startbootstrap.com/previews/freelancer/
