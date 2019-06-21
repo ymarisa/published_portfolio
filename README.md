@@ -5,10 +5,6 @@
 The `index.html` file is located in `/docs`
 
 To build run:
-``` bash
-./build.sh
-```
-or:
 ```bash
 python3 build.py
 ```
