@@ -1,9 +1,5 @@
 # combine templates with content
 
-## setup
-
-
-
 def build_page(page):
     homedir = "/Users/marisayeung/Dropbox/ksc/homework/hw_2"
     repodir = "ymarisa.github.io"
@@ -14,10 +10,16 @@ def build_page(page):
     fullcontentdir = homedir + "/" + repodir + "/" + contentdir
     fullbuilddir = homedir + "/" + repodir + "/" + builddir
 
-    a = fulltemplatedir + "/top.html"
-    b = fullcontentdir + "/" + page
-    c = fulltemplatedir + "/bottom.html"
-    d = fullbuilddir + "/" + page
+    files = []
+    files.append(fulltemplatedir + "/top.html")
+    files.append(fullcontentdir + "/" + page)
+    files.append(fulltemplatedir + "/bottom.html")
+    
+    with open(fullbuilddir + "/" + page, 'w') as outfile:
+        for f in files:
+            with open(f) as infile:
+                for line in infile:
+                    outfile.write(line)
 
 
 build_page("index.html")
