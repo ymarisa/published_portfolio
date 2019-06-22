@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Marisa Geoghegan Yeung's Portfolio | {{title}}</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script src="./filter.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Glegoo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Heebo|Roboto&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./css/freelancer.min.css">
+    <link rel="stylesheet" href="./css/freelancer.css">
+
+    <link rel="stylesheet" href="./css/portfolio.css">
+
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top my-nav">
+        <div class="container">
+            
+            <a class="navbar-brand navbar-brand-box" href="#">
+                <span class="logo-text">MGY</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                
+                <ul class="navbar-nav nav-ul-margins">
+                
+                    <li class ="nav-item active">
+                        <a class="nav-link" href="./index.html">Portfolio {{index_current_span}}</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="./about.html">About {{about_current_span}}</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="./contact.html">Contact {{contact_current_span}}</a>
+                    </li>
+                
+                </ul>
+            
+            </div>
+
+        </div>        
+    </nav>
+    
+     <!-- Page Content -->
+    
+    <div class="container">
+        <div class="jumbotron">
+            <p class="lead"> Hello, my name is</p>
+            <h1 class="display-3">Marisa Geoghegan Yeung</h1>      
+            <p class="lead">I am a full stack developer in the SF bay area.</p>
+        </div>
+    </div>
+
+{{content}}
+
+    <footer class="container-fluid text-center">
+
+        <p class="my-footer-text">Copyright Marisa Geoghegan Yeung 2019</p>
+
+    </footer>
+
+</body>
+</html>
