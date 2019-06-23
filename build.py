@@ -34,6 +34,12 @@ PAGES = [
         "output": FULLBUILDDIR + "/contact.html",
         "content_list_link": "./contact.html",
         "title": "Contact",
+    },
+    {
+        "filename": FULLCONTENTDIR + "/blog.html",
+        "output": FULLBUILDDIR + "/blog.html",
+        "content_list_link": "./blog.html",
+        "title": "Blog"
     }
 ]
 
