@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 # combine templates with content
 
@@ -34,6 +35,24 @@ PAGES = [
         "title": "Contact",
         "current": "contact_current_span",
     }
+]
+
+BLOG_POSTS = [
+    {
+        "filename": "blog/1.html",
+        "date": "June 19, 2019",
+        "title": "Hello world!"
+    },
+    {
+        "filename": "blog/2.html",
+        "date": "June 20, 2019",
+        "title": "Foo bar"
+    },
+    {
+        "filename": "blog/3.html",
+        "date": "June 21, 2019",
+        "title": "La de da"
+    },
 ]
 
 CURRENT_SPAN_WORDS = [
@@ -77,6 +96,7 @@ def build_page(page):
     # replace template words of format {{foo}}
     built_page = built_page.replace("{{title}}", page["title"])
     built_page = built_page.replace("{{content}}", content)
+    built_page = built_page.replace("{{year}}", datetime.now().year)
 
     for current in CURRENT_SPAN_WORDS:
         if current[0] == "{{" + page["current"] + "}}":
