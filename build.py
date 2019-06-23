@@ -20,22 +20,50 @@ PAGES = [
     {
         "filename": FULLCONTENTDIR + "/index.html",
         "output": FULLBUILDDIR + "/index.html",
-        "title": "Home",
-        "current": "index_current_span",
+        "content_list_link": "./index.html",
+        "title": "Portfolio",
     },
     {
         "filename": FULLCONTENTDIR + "/about.html",
         "output": FULLBUILDDIR + "/about.html",
+        "content_list_link": "./about.html",
         "title": "About",
-        "current": "about_current_span",
     },
     {
         "filename": FULLCONTENTDIR + "/contact.html",
         "output": FULLBUILDDIR + "/contact.html",
+        "content_list_link": "./contact.html",
         "title": "Contact",
-        "current": "contact_current_span",
     }
 ]
+
+CONTENT_LINK_HTML = """<li class="nav-item {{content-active}}">
+                        <a class="nav-link" href="{{content-link}}">{{content-title}}{{content-current-span}}</a>
+                    </li>
+                    """
+
+def add_content_links(page, built_page):
+    content_links = ""
+    for p in PAGES:
+        h = CONTENT_LINK_HTML
+
+        if p["content_list_link"] == page["content_list_link"]:
+            h = h.replace("{{content-active}}", "active")
+            h = h.replace("{{content-current-span}}", CURRENT_SPAN)
+        else:
+            h = h.replace("{{content-active}}", "")
+            h = h.replace("{{content-current-span}}", "")
+
+        h = h.replace("{{content-link}}", p["content_list_link"])
+        h = h.replace("{{content-title}}", p["title"])
+
+        content_links = content_links + h
+
+    built_page = built_page.replace("{{content_links}}", content_links)
+
+    return built_page
+
+
 
 BLOG_POSTS = [
     {
@@ -55,11 +83,11 @@ BLOG_POSTS = [
     },
 ]
 
-CURRENT_SPAN_WORDS = [
-    ["{{index_current_span}}", "{{index_active}}"], 
-    ["{{about_current_span}}", "{{about_active}}"], 
-    ["{{contact_current_span}}", "{{contact_active}}"]
-]
+# CURRENT_SPAN_WORDS = [
+#     ["{{index_current_span}}", "{{index_active}}"], 
+#     ["{{about_current_span}}", "{{about_active}}"], 
+#     ["{{contact_current_span}}", "{{contact_active}}"]
+# ]
 
 # def replace_template_words(page, line):
 #     line_check = TEMPLATE_PATTERN.split(line)
@@ -88,24 +116,31 @@ CURRENT_SPAN_WORDS = [
 #         line_check[1] = page["title"]
 #     return ''.join(line_check)
 
-def build_page(page):
-    # read in template and content
-    built_page = open(TEMPLATE).read()
+def replace_template_words(page, built_page):
     content = open(page["filename"]).read()
 
     # replace template words of format {{foo}}
     built_page = built_page.replace("{{title}}", page["title"])
     built_page = built_page.replace("{{content}}", content)
-    built_page = built_page.replace("{{year}}", datetime.now().year)
+    built_page = built_page.replace("{{year}}", datetime.now().strftime("%Y"))
 
-    for current in CURRENT_SPAN_WORDS:
-        if current[0] == "{{" + page["current"] + "}}":
-            built_page = built_page.replace(current[0], CURRENT_SPAN)
-            built_page = built_page.replace(current[1], "active")
-        else:
-            built_page = built_page.replace(current[0], "")
-            built_page = built_page.replace(current[1], "")
+    built_page = add_content_links(page, built_page)
 
+    # for current in CURRENT_SPAN_WORDS:
+    #     if current[0] == "{{" + page["current"] + "}}":
+    #         built_page = built_page.replace(current[0], CURRENT_SPAN)
+    #         built_page = built_page.replace(current[1], "active")
+    #     else:
+    #         built_page = built_page.replace(current[0], "")
+    #         built_page = built_page.replace(current[1], "")
+
+    return built_page
+
+def build_page(page):
+    # read in template and content
+    built_page = open(TEMPLATE).read()   
+
+    built_page = replace_template_words(page, built_page)
 
     # write built file
     open(page["output"], 'w+').write(built_page)
