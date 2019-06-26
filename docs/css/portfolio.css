@@ -105,6 +105,10 @@ footer {
     border: 0px;
 }
 
+.card-post {
+    border-top: 0px solid #ffffff;
+}
+
 h2 {
     font-family: 'Glegoo', serif;
     text-align: center;
