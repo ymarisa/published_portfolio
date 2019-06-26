@@ -118,38 +118,6 @@ def add_blog_posts(page, built_page):
     built_page = built_page.replace("{{blog-post}}", all_posts)
     return built_page
 
-# CURRENT_SPAN_WORDS = [
-#     ["{{index_current_span}}", "{{index_active}}"], 
-#     ["{{about_current_span}}", "{{about_active}}"], 
-#     ["{{contact_current_span}}", "{{contact_active}}"]
-# ]
-
-# def replace_template_words(page, line):
-#     line_check = TEMPLATE_PATTERN.split(line)
-
-#     if len(line_check) < 2:
-#         return line
-#     if line_check[1] == page["current"]:
-#         line_check[1] = CURRENT_SPAN
-#     elif line_check[1] == "title":
-#         line_check[1] = page["title"]
-#     else:
-#         # don't add a current span if the template word doesn't match the page
-#         line_check[1] = ""
-
-#     return''.join(line_check)
-
-# Search out {{foo}} style template words in the template file and replace
-# def replace_template_words_foo(page, line):
-#     fname = page["filename"].split
-#     line_check = TEMPLATE_PATTERN.split(line)
-#     if len(line_check) < 2:
-#         return line
-#     if line_check[1] == TEMPLATE_CURRENT_DICT[page]:
-#         line_check[1] = CURRENT_SPAN
-#     if line_check[1] == "title":
-#         line_check[1] = page["title"]
-#     return ''.join(line_check)
 
 def replace_template_words(page, built_page):
     content = open(page["filename"]).read()
@@ -168,6 +136,7 @@ def replace_template_words(page, built_page):
 
     return built_page
 
+
 def build_page(page):
     # read in template and content
     built_page = open(TEMPLATE).read()   
@@ -180,21 +149,6 @@ def build_page(page):
     # write built file
     open(page["output"], 'w+').write(built_page)
 
-# Generate an html file consisting of top template > content > bottom template
-# def build_page(page):
-
-#     with open(page["output"], 'w') as outfile:
-#         with open(TEMPLATE) as infile:
-#             for line in infile:
-#                 if line == """{{content}}""":
-#                     print(line)
-#                     #add content file to output
-#                     with open(page["filename"], 'w') as contentfile:
-#                         for content_line in contentfile:
-#                             outfile.write(content_line)
-#                 else:
-#                     line = replace_template_words(page, line)
-#                     outfile.write(line)
 
 def main():
     for page in PAGES:

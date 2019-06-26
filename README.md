@@ -2,7 +2,6 @@
 
 ### HW3 submission notes
 * Changed paths in build.py so it can be run on other machines per HW2 feedback
-* 
 
 ### Build
 
