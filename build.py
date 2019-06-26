@@ -7,14 +7,15 @@ TEMPLATE_PATTERN = re.compile(r"{{|}}")
 
 CURRENT_SPAN = "<span class=\"sr-only\">(current)</span>"
 
-HOMEDIR = "/Users/marisayeung/Dropbox/ksc/homework/hw_2"
-REPODIR = "ymarisa.github.io"
+# HOMEDIR = "."
+REPODIR = "."
 CONTENTDIR = "content"
 BUILDDIR = "docs"
-FULLCONTENTDIR = HOMEDIR + "/" + REPODIR + "/" + CONTENTDIR
-FULLBUILDDIR = HOMEDIR + "/" + REPODIR + "/" + BUILDDIR
+FULLCONTENTDIR = REPODIR + "/" + CONTENTDIR
+FULLBUILDDIR = REPODIR + "/" + BUILDDIR
 
 TEMPLATE = "templates/template.html"
+BLOG_POST_TEMPLATE = "templates/blog_post.html"
 
 PAGES = [
     {
@@ -48,6 +49,9 @@ CONTENT_LINK_HTML = """<li class="nav-item {{content-active}}">
                     </li>
                     """
 
+FREELANCER_CSS = """<link rel="stylesheet" href="./css/freelancer.min.css">
+            <link rel="stylesheet" href="./css/freelancer.css">"""
+
 def add_content_links(page, built_page):
     content_links = ""
     for p in PAGES:
@@ -73,21 +77,46 @@ def add_content_links(page, built_page):
 
 BLOG_POSTS = [
     {
-        "filename": "blog/1.html",
-        "date": "June 19, 2019",
+        "filename": "blog/1.txt",
+        "date": "June 22, 2019",
         "title": "Hello world!"
     },
     {
-        "filename": "blog/2.html",
+        "filename": "blog/2.txt",
         "date": "June 20, 2019",
         "title": "Foo bar"
     },
     {
-        "filename": "blog/3.html",
+        "filename": "blog/3.txt",
         "date": "June 21, 2019",
         "title": "La de da"
     },
+    {
+        "filename": "blog/4.txt",
+        "date": "June 19, 2019",
+        "title": "Zip a dee do da"
+    },
 ]
+
+def add_blog_posts(page, built_page):
+    sorted(BLOG_POSTS, key=lambda post: post["date"], reverse=True)
+
+    post_template = open(BLOG_POST_TEMPLATE).read()
+
+    all_posts = ""
+
+    for post in BLOG_POSTS:
+        built_post = post_template
+        text = open(post["filename"]).read()
+
+        built_post = built_post.replace("{{blog-post-title}}", post["title"])
+        built_post = built_post.replace("{{blog-post-date}}", post["date"])
+        built_post = built_post.replace("{{blog-post-content}}", text)
+
+        all_posts = all_posts + built_post
+
+    built_page = built_page.replace("{{blog-post}}", all_posts)
+    return built_page
 
 # CURRENT_SPAN_WORDS = [
 #     ["{{index_current_span}}", "{{index_active}}"], 
@@ -132,13 +161,10 @@ def replace_template_words(page, built_page):
 
     built_page = add_content_links(page, built_page)
 
-    # for current in CURRENT_SPAN_WORDS:
-    #     if current[0] == "{{" + page["current"] + "}}":
-    #         built_page = built_page.replace(current[0], CURRENT_SPAN)
-    #         built_page = built_page.replace(current[1], "active")
-    #     else:
-    #         built_page = built_page.replace(current[0], "")
-    #         built_page = built_page.replace(current[1], "")
+    if page["title"] == "Contact":
+        built_page = built_page.replace("{{freelancer_css}}", FREELANCER_CSS)
+    else:
+        built_page = built_page.replace("{{freelancer_css}}", "")
 
     return built_page
 
@@ -147,6 +173,9 @@ def build_page(page):
     built_page = open(TEMPLATE).read()   
 
     built_page = replace_template_words(page, built_page)
+
+    if page["title"] == "Blog":
+        built_page = add_blog_posts(page, built_page)
 
     # write built file
     open(page["output"], 'w+').write(built_page)
