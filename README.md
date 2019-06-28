@@ -1,5 +1,8 @@
 # my_portfolio
 
+### HW3 submission notes
+* Changed paths in build.py so it can be run on other machines per HW2 feedback
+
 ### Build
 
 The `index.html` file is located in `/docs`
@@ -8,8 +11,6 @@ To build run:
 ```bash
 python3 build.py
 ```
-
-These scripts are equivalent, and create the html files from the tempaltes and content.
 
 ### Sources
 Email contact form from startbootstrap theme
@@ -29,3 +30,6 @@ Filter jQuery example from
 
    It shrinks but stays next to the text, squishing it
 
+1. Blog widgets don't work yet
+1. Blog styling needs more work to match the rest of the site
+1. Blog entries don't overflow into a "more" page yet
