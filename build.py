@@ -1,5 +1,7 @@
 import re
 from datetime import datetime
+import glob
+import os
 
 # combine templates with content
 
@@ -7,42 +9,32 @@ TEMPLATE_PATTERN = re.compile(r"{{|}}")
 
 CURRENT_SPAN = "<span class=\"sr-only\">(current)</span>"
 
-# HOMEDIR = "."
-REPODIR = "."
-CONTENTDIR = "content"
-BUILDDIR = "docs"
-FULLCONTENTDIR = REPODIR + "/" + CONTENTDIR
-FULLBUILDDIR = REPODIR + "/" + BUILDDIR
-
-TEMPLATE = "templates/template.html"
-BLOG_POST_TEMPLATE = "templates/blog_post.html"
-
-PAGES = [
-    {
-        "filename": FULLCONTENTDIR + "/index.html",
-        "output": FULLBUILDDIR + "/index.html",
-        "content_list_link": "./index.html",
-        "title": "Portfolio",
-    },
-    {
-        "filename": FULLCONTENTDIR + "/about.html",
-        "output": FULLBUILDDIR + "/about.html",
-        "content_list_link": "./about.html",
-        "title": "About",
-    },
-    {
-        "filename": FULLCONTENTDIR + "/contact.html",
-        "output": FULLBUILDDIR + "/contact.html",
-        "content_list_link": "./contact.html",
-        "title": "Contact",
-    },
-    {
-        "filename": FULLCONTENTDIR + "/blog.html",
-        "output": FULLBUILDDIR + "/blog.html",
-        "content_list_link": "./blog.html",
-        "title": "Blog"
-    }
-]
+# PAGES = [
+#     {
+#         "filename": FULLCONTENTDIR + "/index.html",
+#         "output": FULLBUILDDIR + "/index.html",
+#         "content_list_link": "./index.html",
+#         "title": "Portfolio",
+#     },
+#     {
+#         "filename": FULLCONTENTDIR + "/about.html",
+#         "output": FULLBUILDDIR + "/about.html",
+#         "content_list_link": "./about.html",
+#         "title": "About",
+#     },
+#     {
+#         "filename": FULLCONTENTDIR + "/contact.html",
+#         "output": FULLBUILDDIR + "/contact.html",
+#         "content_list_link": "./contact.html",
+#         "title": "Contact",
+#     },
+#     {
+#         "filename": FULLCONTENTDIR + "/blog.html",
+#         "output": FULLBUILDDIR + "/blog.html",
+#         "content_list_link": "./blog.html",
+#         "title": "Blog"
+#     }
+# ]
 
 CONTENT_LINK_HTML = """<li class="nav-item {{content-active}}">
                         <a class="nav-link" href="{{content-link}}">{{content-title}}{{content-current-span}}</a>
@@ -52,9 +44,10 @@ CONTENT_LINK_HTML = """<li class="nav-item {{content-active}}">
 FREELANCER_CSS = """<link rel="stylesheet" href="./css/freelancer.min.css">
             <link rel="stylesheet" href="./css/freelancer.css">"""
 
-def add_content_links(page, built_page):
+
+def add_content_links(page, pages, built_page):
     content_links = ""
-    for p in PAGES:
+    for p in pages:
         h = CONTENT_LINK_HTML
 
         if p["content_list_link"] == page["content_list_link"]:
@@ -72,7 +65,6 @@ def add_content_links(page, built_page):
     built_page = built_page.replace("{{content_links}}", content_links)
 
     return built_page
-
 
 
 BLOG_POSTS = [
@@ -98,10 +90,11 @@ BLOG_POSTS = [
     },
 ]
 
-def add_blog_posts(page, built_page):
-    sorted(BLOG_POSTS, key=lambda post: post["date"], reverse=True)
 
-    post_template = open(BLOG_POST_TEMPLATE).read()
+def add_blog_posts(built_page, template):
+    sorted(BLOG_POSTS, key=(lambda post: post["date"]), reverse=True)
+
+    post_template = open(template).read()
 
     all_posts = ""
 
@@ -119,7 +112,7 @@ def add_blog_posts(page, built_page):
     return built_page
 
 
-def replace_template_words(page, built_page):
+def replace_template_words(page, pages, built_page):
     content = open(page["filename"]).read()
 
     # replace template words of format {{foo}}
@@ -127,7 +120,7 @@ def replace_template_words(page, built_page):
     built_page = built_page.replace("{{content}}", content)
     built_page = built_page.replace("{{year}}", datetime.now().strftime("%Y"))
 
-    built_page = add_content_links(page, built_page)
+    built_page = add_content_links(page, pages, built_page)
 
     if page["title"] == "Contact":
         built_page = built_page.replace("{{freelancer_css}}", FREELANCER_CSS)
@@ -137,22 +130,69 @@ def replace_template_words(page, built_page):
     return built_page
 
 
-def build_page(page):
+def build_page(page, pages, templates):
     # read in template and content
-    built_page = open(TEMPLATE).read()   
+    built_page = open(templates['template']).read()   
 
-    built_page = replace_template_words(page, built_page)
+    built_page = replace_template_words(page, pages, built_page)
 
     if page["title"] == "Blog":
-        built_page = add_blog_posts(page, built_page)
+        built_page = add_blog_posts(built_page, templates['blog_post'])
 
     # write built file
     open(page["output"], 'w+').write(built_page)
 
 
+def get_templates(template_dir):
+    all_templates = glob.glob(template_dir)
+    templates = {}
+    for file in all_templates:
+        base_file_name = os.path.basename(file)
+        base_file_name_no_ext, ext = os.path.splitext(base_file_name)
+        templates[base_file_name_no_ext] = file
+
+    return templates
+
+
+def get_content_pages(content_dir, build_dir):
+    all_html_files = glob.glob(content_dir)
+    pages = []
+    for file in all_html_files:
+        base_file_name = os.path.basename(file)
+        base_file_name_no_ext, ext = os.path.splitext(base_file_name)
+
+        output_file = os.path.join(build_dir, base_file_name)
+
+        link = os.path.join(".", base_file_name)
+
+        if base_file_name_no_ext == "index":
+            title = "Portfolio"
+        else:
+            title = base_file_name_no_ext.capitalize()
+
+        page = {
+            "filename": file,
+            "output": output_file,
+            "content_list_link": link,
+            "title": title,
+        }
+        pages.append(page)
+
+    return pages
+
+
 def main():
-    for page in PAGES:
-        build_page(page)
+    build_dir = "docs"
+    content_dir = "content/*.html"
+
+    template_dir = "templates/*.html"
+
+    templates = get_templates(template_dir)
+    pages = get_content_pages(content_dir, build_dir)
+
+    for page in pages:
+        build_page(page, pages, templates)
+
 
 if __name__ == "__main__":
     main()

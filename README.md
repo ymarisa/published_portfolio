@@ -19,6 +19,9 @@ Email contact form from startbootstrap theme
 Filter jQuery example from
     https://bootsnipp.com/snippets/r1Z7d
 
+Color pallete
+https://www.colourlovers.com/palette/1811244/1001_Stories
+
 ### Known issues / Still working on
 1. Contact form doesn't send email.
 1. Awkward card shuffling when changing filters.
