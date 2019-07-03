@@ -43,17 +43,13 @@
                 
                 <ul class="navbar-nav nav-ul-margins">
 
-                    {% for page_title in page_titles %}
-                        {% if page_title.content-active %}
+                    {% for page in content_links %}
+                        {% if page.content_active %}
                             <li class="nav-item active">
-                            <a class="nav-link" href="{{ page_title.content-link }}">
-                                {{ page_title.content-title }}<span class=\"sr-only\">(current)</span>
-                            </a>
                         {% else %}
                             <li class="nav-item">
-                            <a class="nav-link" href="{{ page_title.content-link }}">{{ page_title.content-title }}
-                            </a>
                         {% endif %}
+                        <a class="nav-link" href="{{ page.content_link }}">{{ page.content_title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
