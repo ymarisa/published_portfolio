@@ -1,7 +1,7 @@
 # my_portfolio
 
-### HW3 submission notes
-* Changed paths in build.py so it can be run on other machines per HW2 feedback
+### HW4 submission notes
+* Per HW3 feedback regarding the accessibility (screen reader) element in the menu: I took it out because I had trouble getting it working with jinja templating. I will implement a better solution to the site as a whole in future.
 
 ### Build
 
