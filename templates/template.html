@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 
-    <title>Marisa Geoghegan Yeung's Portfolio | {{title}}</title>
+    <title>Marisa Geoghegan Yeung's Portfolio | {{ title }}</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,8 +16,11 @@
 
     <link href="https://fonts.googleapis.com/css?family=Glegoo&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Heebo|Roboto&display=swap" rel="stylesheet">
-    
-    {{freelancer_css}}
+
+    {% if is_contact_page %}
+        <link rel="stylesheet" href="./css/freelancer.min.css">
+        <link rel="stylesheet" href="./css/freelancer.css">
+    {% endif %}
 
     <link rel="stylesheet" href="./css/portfolio.css">
 
@@ -40,8 +43,15 @@
                 
                 <ul class="navbar-nav nav-ul-margins">
 
-                    {{content_links}}
-                                
+                    {% for page in content_links %}
+                        {% if page.content_active %}
+                            <li class="nav-item active">
+                        {% else %}
+                            <li class="nav-item">
+                        {% endif %}
+                        <a class="nav-link" href="{{ page.content_link }}">{{ page.content_title }}</a>
+                        </li>
+                    {% endfor %}
                 </ul>
             
             </div>
@@ -59,11 +69,11 @@
         </div>
     </div>
 
-{{content}}
+{{ content }}
 
     <footer class="container-fluid text-center">
 
-        <p class="my-footer-text">Copyright Marisa Geoghegan Yeung {{year}}</p>
+        <p class="my-footer-text">Copyright Marisa Geoghegan Yeung {{ year }}</p>
 
     </footer>
 
