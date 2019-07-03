@@ -2,6 +2,8 @@ import re
 from datetime import datetime
 import glob
 import os
+from jinja2 import Template
+import json
 
 # combine templates with content
 
@@ -64,7 +66,18 @@ BLOG_POSTS = [
 ]
 
 
-def add_blog_posts(built_page, template):
+def get_blog_posts(built_page, template):
+    all_json_files = glob.glob("blog/*.json")
+
+    # sort?
+    posts = []
+    for file in all_json_files:
+        blog_post_dict = json.load(open(file))
+        # blog_post_dict["fname"]
+    return ""
+
+
+def add_blog_posts_old(built_page, template):
     sorted(BLOG_POSTS, key=(lambda post: post["date"]), reverse=True)
 
     post_template = open(template).read()
@@ -85,7 +98,49 @@ def add_blog_posts(built_page, template):
     return built_page
 
 
-def replace_template_words(page, pages, built_page):
+def get_content_links_list(page, pages):
+    page_list = []
+    for p in pages:
+        d = {
+            "content-active": p["title"] == page["title"],
+            "content-link": p["content_list_link"],
+            "content-title": p["title"],
+        }
+        page_list.append(d)
+    return page_list
+
+
+def build_page(page, pages, template_name):
+    template_html = open(template_name).read()
+    template = Template(template_html)
+
+    # get content links
+    content_links_list = get_content_links_list(page, pages)
+
+    template.render(
+        title=page["title"],
+        content_links=content_links_list,
+        content=open(page["filename"]).read(),
+        year=datetime.now().strftime("%Y"),
+        is_contact_page=page["title"] == "Contact",
+    )
+
+    # get blog posts
+    if page["title"] == "Blog":
+        all_json_files = glob.glob("blog/*.json")
+
+        # sort?
+        posts = []
+        for file in all_json_files:
+            blog_post_dict = json.load(open(file))
+            posts.append(blog_post_dict)
+
+        template.render(
+            blog_posts=posts
+        )
+
+
+def replace_template_words_old(page, pages, built_page):
     content = open(page["filename"]).read()
 
     # replace template words of format {{foo}}
@@ -103,28 +158,29 @@ def replace_template_words(page, pages, built_page):
     return built_page
 
 
-def build_page(page, pages, templates):
+def build_page_old(page, pages, template):
     # read in template and content
-    built_page = open(templates['template']).read()   
 
-    built_page = replace_template_words(page, pages, built_page)
+    render_template(page, pages, template)
 
-    if page["title"] == "Blog":
-        built_page = add_blog_posts(built_page, templates['blog_post'])
+    # if page["title"] == "Blog":
+    #     template_blog_html = open(templates['blog_post'])
+    #     template_blog = Template(template_blog_html)
+        # built_page = add_blog_posts(built_page, template_blog)
 
     # write built file
-    open(page["output"], 'w+').write(built_page)
+    # open(page["output"], 'w+').write(built_page)
 
 
-def get_templates(template_dir):
-    all_templates = glob.glob(template_dir)
-    templates = {}
-    for file in all_templates:
-        base_file_name = os.path.basename(file)
-        base_file_name_no_ext, ext = os.path.splitext(base_file_name)
-        templates[base_file_name_no_ext] = file
-
-    return templates
+# def get_templates(template_dir):
+#     all_templates = glob.glob(template_dir)
+#     templates = {}
+#     for file in all_templates:
+#         base_file_name = os.path.basename(file)
+#         base_file_name_no_ext, ext = os.path.splitext(base_file_name)
+#         templates[base_file_name_no_ext] = file
+#
+#     return templates
 
 
 def get_content_pages(content_dir, build_dir):
@@ -158,13 +214,13 @@ def main():
     build_dir = "docs"
     content_dir = "content/*.html"
 
-    template_dir = "templates/*.html"
+    template = "templates/template.html"
 
-    templates = get_templates(template_dir)
+    # templates = get_templates(template_dir)
     pages = get_content_pages(content_dir, build_dir)
 
     for page in pages:
-        build_page(page, pages, templates)
+        build_page(page, pages, template)
 
 
 if __name__ == "__main__":

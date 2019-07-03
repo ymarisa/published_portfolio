@@ -9,7 +9,18 @@
                   <small>Notes and Anecdotes</small>
                 </h1> -->
 
-                {{blog-post}}
+                <!-- Blog Post -->
+                {% for post in blog_posts %}
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <h2 class="card-title">{{ post.title }}</h2>
+                        <p class="card-text">{{ post.text }}</p>
+                        <!-- <a href="#" class="btn btn-primary">Read More →</a> -->
+                      </div>
+                      <div class="card-footer text-muted card-post"> Posted: {{ post.date }} by <a href="#">MGY</a>
+                      </div>
+                    </div>
+                {% endfor %}
 
                 <!-- Pagination -->
                 <ul class="pagination justify-content-center mb-4">
