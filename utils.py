@@ -45,21 +45,23 @@ def get_content_pages(content_dir, build_dir):
 
 
 def build_page(page, pages, template_name):
-    template_html = open(template_name).read()
-    template = Template(template_html)
+    with open(template_name) as template_html:
+        template = Template(template_html.read())
 
     is_contact = page["title"] == "Contact"
 
     # get content links
     content_links_list = get_content_links_list(page, pages)
 
-    built_page = template.render(
-        title=page["title"],
-        content_links=content_links_list,
-        content=open(page["filename"]).read(),
-        is_contact_page=is_contact,
-        year=datetime.now().strftime("%Y")
-    )
+    with open(page["filename"]) as content_file:
+
+        built_page = template.render(
+            title=page["title"],
+            content_links=content_links_list,
+            content=content_file.read(),
+            is_contact_page=is_contact,
+            year=datetime.now().strftime("%Y")
+        )
 
     # get blog posts
     if page["title"] == "Blog":
@@ -69,28 +71,13 @@ def build_page(page, pages, template_name):
         # sort?
         posts = []
         for file in all_json_files:
-            blog_post_dict = json.load(open(file))
-            posts.append(blog_post_dict)
+            with open(file) as json_file:
+                blog_post_dict = json.load(json_file)
+                posts.append(blog_post_dict)
 
         built_page = blog_template.render(
             blog_posts=posts
         )
 
-    open(page["output"], 'w+').write(built_page)
-
-
-def main():
-    build_dir = "docs"
-    content_dir = "content/*.html"
-
-    template = "templates/template.html"
-
-    # templates = get_templates(template_dir)
-    pages = get_content_pages(content_dir, build_dir)
-
-    for page in pages:
-        build_page(page, pages, template)
-
-
-if __name__ == "__main__":
-    main()
+    with open(page["output"], 'w+') as output_page:
+        output_page.write(built_page)
