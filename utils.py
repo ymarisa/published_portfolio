@@ -77,20 +77,3 @@ def build_page(page, pages, template_name):
         )
 
     open(page["output"], 'w+').write(built_page)
-
-
-def main():
-    build_dir = "docs"
-    content_dir = "content/*.html"
-
-    template = "templates/template.html"
-
-    # templates = get_templates(template_dir)
-    pages = get_content_pages(content_dir, build_dir)
-
-    for page in pages:
-        build_page(page, pages, template)
-
-
-if __name__ == "__main__":
-    main()

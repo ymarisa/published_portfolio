@@ -1,5 +1,5 @@
 import unittest
-import build
+import utils
 
 
 class Test(unittest.TestCase):
@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
             }
         ]
 
-        result = build.get_content_pages(content_dir, build_dir)
+        result = utils.get_content_pages(content_dir, build_dir)
 
         self.assertEqual(pages, result)
 
