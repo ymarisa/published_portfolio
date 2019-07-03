@@ -9,33 +9,6 @@ TEMPLATE_PATTERN = re.compile(r"{{|}}")
 
 CURRENT_SPAN = "<span class=\"sr-only\">(current)</span>"
 
-# PAGES = [
-#     {
-#         "filename": FULLCONTENTDIR + "/index.html",
-#         "output": FULLBUILDDIR + "/index.html",
-#         "content_list_link": "./index.html",
-#         "title": "Portfolio",
-#     },
-#     {
-#         "filename": FULLCONTENTDIR + "/about.html",
-#         "output": FULLBUILDDIR + "/about.html",
-#         "content_list_link": "./about.html",
-#         "title": "About",
-#     },
-#     {
-#         "filename": FULLCONTENTDIR + "/contact.html",
-#         "output": FULLBUILDDIR + "/contact.html",
-#         "content_list_link": "./contact.html",
-#         "title": "Contact",
-#     },
-#     {
-#         "filename": FULLCONTENTDIR + "/blog.html",
-#         "output": FULLBUILDDIR + "/blog.html",
-#         "content_list_link": "./blog.html",
-#         "title": "Blog"
-#     }
-# ]
-
 CONTENT_LINK_HTML = """<li class="nav-item {{content-active}}">
                         <a class="nav-link" href="{{content-link}}">{{content-title}}{{content-current-span}}</a>
                     </li>
