@@ -14,9 +14,13 @@ INCORRECT_ARGS = "Incorrect number of args"
 ARG_DOESNT_EXIST = "Argument doesn't exist."
 FILE_EXISTS = "File already exists."
 
+
 def main(argv):
+    # only print if run from main, not if run from the test module
+    print_output = __name__ == "__main__"
+
     if len(argv) < 1 or len(argv) > 2:
-        print(USAGE)
+        print_output and print(USAGE)
         raise SystemExit(INCORRECT_ARGS)
     option = argv[0]
 
@@ -27,7 +31,7 @@ def main(argv):
 
     if option == "build":
         if len(argv) == 2:
-            print(USAGE)
+            print_output and print(USAGE)
             raise SystemExit(INCORRECT_ARGS)
         else:
             pages = utils.get_content_pages(content_dir, build_dir)
@@ -37,7 +41,7 @@ def main(argv):
 
     elif option == "new":
         if len(argv) != 2:
-            print(USAGE)
+            print_output and print(USAGE)
             raise SystemExit(INCORRECT_ARGS)
         else:
             out_filename = "content/" + argv[1]
@@ -47,7 +51,7 @@ def main(argv):
                 output_file.write(NEW_CONTENT)
 
     else:
-        print(USAGE)
+        print_output and print(USAGE)
         raise SystemExit(ARG_DOESNT_EXIST)
 
 

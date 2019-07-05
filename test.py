@@ -50,30 +50,40 @@ class Test(unittest.TestCase):
         self.assertEqual(exit_code, None)
 
     def test_manage_new_correct_usage(self):
-        test_file = "testfile.html"
+        test_file = "testfilexyz.html"
         ls_before = glob.glob("content/*html")
         self.assertTrue(test_file not in ls_before)
-        exit_code = manage.main(["new", test_file])
-        print(exit_code)
-        ls_after = glob.glob("content/*html")
-        self.assertTrue("content/" + test_file in ls_after)
-        # move to teardown
+
+        manage.main(["new", test_file])
+
+        # move to teardown?
         if os.path.exists("content/" + test_file):
             os.remove("content/" + test_file)
+
+        ls_after = glob.glob("content/*html")
+        self.assertTrue("content/" + test_file not in ls_after)
 
     def test_manage_new_already_exists(self):
         test_file = "testfilexyz.html"
         ls_before = glob.glob("content/*html")
         self.assertTrue(test_file not in ls_before)
-        manage.main(["new", test_file])
 
-        try:
+        with open("content/" + test_file, "w") as f:
+            f.write("")
+
+        ls_during = glob.glob("content/*html")
+        self.assertTrue("content/" + test_file in ls_during)
+
+        with self.assertRaises(SystemExit) as se:
             manage.main(["new", test_file])
-        except SystemExit as se:
-            self.assertEqual(se.code, manage.FILE_EXISTS)
+
+        self.assertEqual(se.exception.code, manage.FILE_EXISTS)
 
         if os.path.exists("content/" + test_file):
             os.remove("content/" + test_file)
+
+        ls_after = glob.glob("content/*html")
+        self.assertTrue(test_file not in ls_after)
 
     def test_manage_bad_args(self):
         try:
