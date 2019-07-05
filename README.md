@@ -6,6 +6,7 @@
 * I changed the blog files from txt to json so I could put info like date and title with the blog text
 
 
+
 ### Build
 
 The `index.html` file is located in `/docs`
